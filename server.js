@@ -40,6 +40,10 @@ app.get('/', (req, res) => {
     res.send('LMS Backend Server is running successfully!');
 });
 
+app.get('/api', (req, res) => {
+    res.json({ message: 'LMS API is active and ready!' });
+});
+
 // Auth Routes (Direct to match frontend service)
 app.post('/api/auth/register', registerUser);
 app.post('/api/auth/login', loginUser);

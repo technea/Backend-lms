@@ -35,6 +35,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Root Route
+app.get('/', (req, res) => {
+    res.send('LMS Backend Server is running successfully!');
+});
+
 // Auth Routes (Direct to match frontend service)
 app.post('/api/auth/register', registerUser);
 app.post('/api/auth/login', loginUser);

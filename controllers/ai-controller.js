@@ -41,9 +41,15 @@ export const getAIResponse = async (req, res) => {
         - For non-LMS questions, politely decline and stay on topic.
         - Friendly and academic tone.`;
 
-        // Start chat with history
+        // Sanitize Chat History: Gemini requires history to start with 'user'
+        let sanitizedHistory = chatHistory || [];
+        if (sanitizedHistory.length > 0 && sanitizedHistory[0].role === 'model') {
+            sanitizedHistory = sanitizedHistory.slice(1);
+        }
+
+        // Start chat with sanitized history
         const chat = model.startChat({
-            history: chatHistory || [],
+            history: sanitizedHistory,
             generationConfig: {
                 maxOutputTokens: 800,
                 temperature: 0.7

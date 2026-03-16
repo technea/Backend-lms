@@ -16,7 +16,7 @@ export const getAIResponse = async (req, res) => {
             return res.status(500).json({ message: "Gemini API key is missing. Please add it to .env file." });
         }
 
-        // Fetch current courses to give context to the AI
+        // Fetch current courses to give context
         let allCourses = [];
         try {
             allCourses = await Course.find({}, 'title category description price').limit(15);
@@ -33,66 +33,66 @@ export const getAIResponse = async (req, res) => {
 
         Instructions:
         - Be professional, helpful and concise.
-        - Use the course list to recommend relevant curriculum.
-        - For non-LMS or non-educational questions, politely decline and steer back to NexLearn.
-        - Friendly and academic tone.`;
+        - Recommend relevant curriculum from the list.
+        - For non-LMS or non-educational questions, politely steer back.`;
 
-        // Initialize Gemini with system instructions (Native for 1.5 versions)
         const genAI = new GoogleGenerativeAI(apiKey);
         
-        // Try gemini-1.5-flash first, fallback to gemini-pro if not found
-        let model;
-        try {
-            model = genAI.getGenerativeModel({ 
-                model: "gemini-1.5-flash",
-                systemInstruction: systemPrompt 
-            });
-        } catch (e) {
-            model = genAI.getGenerativeModel({ 
-                model: "gemini-pro"
-            });
-        }
+        // Use a more widely accessible model if flash fails
+        const primaryModel = "gemini-1.5-flash";
+        const fallbackModel = "gemini-pro";
 
-        // Sanitize Chat History: Gemini requires history to start with 'user'
-        let sanitizedHistory = chatHistory || [];
-        if (sanitizedHistory.length > 0 && sanitizedHistory[0].role === 'model') {
-            sanitizedHistory = sanitizedHistory.slice(1);
-        }
-
-        // Start chat
-        const chat = model.startChat({
-            history: sanitizedHistory,
-            generationConfig: {
-                maxOutputTokens: 1000,
-                temperature: 0.7
-            },
-        });
-
-        // If fallback model used, we might need to prepend context
-        const finalMessage = model.model === "gemini-pro" 
-            ? `[NexLearn Context: ${systemPrompt}]\n\nUser Question: ${message}`
-            : message;
-
-        const result = await chat.sendMessage(finalMessage);
-        const text = result.response.text();
-
-        res.json({ response: text });
-    } catch (error) {
-        console.error("AI Error:", error);
+        // Sanitize history: Filter out any items without parts or invalid roles
+        let history = chatHistory || [];
         
-        // Final attempt with gemini-pro if error was a 404 on flash
-        if (error.status === 404 || error.message.includes("404")) {
-            try {
-                const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-                const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-                const chat = model.startChat({ history: [] });
-                const result = await chat.sendMessage(message);
-                return res.json({ response: result.response.text() });
-            } catch (innerErr) {
-                console.error("Critical AI Fallback Error:", innerErr);
+        // Gemini strictly requires alternating roles starting with USER
+        // and it must not end with a MODEL message if you're about to send a USER message
+        let cleanedHistory = [];
+        let nextRole = 'user';
+
+        for (const item of history) {
+            if (item.role === nextRole && item.parts && item.parts[0]?.text) {
+                cleanedHistory.push({
+                    role: item.role,
+                    parts: [{ text: item.parts[0].text }]
+                });
+                nextRole = nextRole === 'user' ? 'model' : 'user';
             }
         }
 
+        // If history ended up starting with model, remove it
+        if (cleanedHistory.length > 0 && cleanedHistory[0].role === 'model') {
+            cleanedHistory.shift();
+        }
+
+        const runAI = async (modelName) => {
+            const model = genAI.getGenerativeModel({ 
+                model: modelName,
+                systemInstruction: modelName.includes('1.5') ? systemPrompt : undefined
+            });
+
+            const chat = model.startChat({
+                history: cleanedHistory,
+                generationConfig: { maxOutputTokens: 1000, temperature: 0.7 }
+            });
+
+            const prompt = modelName.includes('1.5') ? message : `[CONTEXT: ${systemPrompt}]\n\nUser: ${message}`;
+            const result = await chat.sendMessage(prompt);
+            return result.response.text();
+        };
+
+        try {
+            const text = await runAI(primaryModel);
+            return res.json({ response: text });
+        } catch (err) {
+            console.error(`Primary model (${primaryModel}) failed:`, err.message);
+            // Fallback
+            const text = await runAI(fallbackModel);
+            return res.json({ response: text });
+        }
+
+    } catch (error) {
+        console.error("AI Controller Critical Error:", error);
         res.status(500).json({ 
             message: "AI is currently resting. Please check your API key and connection.",
             details: error.message 

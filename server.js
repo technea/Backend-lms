@@ -17,6 +17,7 @@ import adminRoutes from './routes/admin-routes.js';
 import aiRoutes from './routes/ai-routes.js';
 import { protect } from './middleware/auth-middleware.js';
 import { getMyEnrollments } from './controllers/enrollment-controller.js';
+import { syncExternalCourses } from './utils/courseFetcher.js';
 
 // Load Environment Variables
 dotenv.config();
@@ -27,7 +28,6 @@ import { registerUser, loginUser, verifyOTP, resendOTP } from './controllers/use
 const app = express();
 
 // Connect to Database
-import { syncExternalCourses } from './utils/courseFetcher.js';
 connectDB().then(() => {
     // Initial sync of external courses
     syncExternalCourses();

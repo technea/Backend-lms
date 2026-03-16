@@ -14,7 +14,9 @@ export const syncExternalCourses = async () => {
                 name: 'NexLearn Bot',
                 email: 'system@nexlearn.ai',
                 password: 'system_secure_pass_123',
-                role: 'admin'
+                role: 'admin',
+                age: 25,
+                isVerified: true
             });
         }
 

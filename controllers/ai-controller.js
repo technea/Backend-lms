@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 import dotenv from 'dotenv';
 import Course from '../models/Courses.js';
 dotenv.config();
@@ -11,9 +11,9 @@ export const getAIResponse = async (req, res) => {
             return res.status(400).json({ message: "Please provide a message" });
         }
 
-        const apiKey = process.env.GEMINI_API_KEY;
-        if (!apiKey || apiKey === "") {
-            return res.status(500).json({ message: "Gemini API key is missing. Please add it to .env file." });
+        const apiKey = process.env.GROQ_API_KEY;
+        if (!apiKey) {
+            return res.status(500).json({ message: "Groq API key is missing. Please add it to .env file." });
         }
 
         // Fetch current courses to give context
@@ -34,67 +34,45 @@ export const getAIResponse = async (req, res) => {
         Instructions:
         - Be professional, helpful and concise.
         - Recommend relevant curriculum from the list.
+        - Respond ONLY in English. Do not use any other language.
         - For non-LMS or non-educational questions, politely steer back.`;
 
-        const genAI = new GoogleGenerativeAI(apiKey);
-        
-        // Use a more widely accessible model if flash fails
-        const primaryModel = "gemini-1.5-flash";
-        const fallbackModel = "gemini-pro";
+        const groq = new Groq({ apiKey });
 
-        // Sanitize history: Filter out any items without parts or invalid roles
-        let history = chatHistory || [];
-        
-        // Gemini strictly requires alternating roles starting with USER
-        // and it must not end with a MODEL message if you're about to send a USER message
-        let cleanedHistory = [];
-        let nextRole = 'user';
+        // Map history to Groq format (user/assistant)
+        let messages = [
+            { role: "system", content: systemPrompt }
+        ];
 
-        for (const item of history) {
-            if (item.role === nextRole && item.parts && item.parts[0]?.text) {
-                cleanedHistory.push({
-                    role: item.role,
-                    parts: [{ text: item.parts[0].text }]
-                });
-                nextRole = nextRole === 'user' ? 'model' : 'user';
-            }
-        }
-
-        // If history ended up starting with model, remove it
-        if (cleanedHistory.length > 0 && cleanedHistory[0].role === 'model') {
-            cleanedHistory.shift();
-        }
-
-        const runAI = async (modelName) => {
-            const model = genAI.getGenerativeModel({ 
-                model: modelName,
-                systemInstruction: modelName.includes('1.5') ? systemPrompt : undefined
+        if (chatHistory && Array.isArray(chatHistory)) {
+            chatHistory.forEach(item => {
+                const role = item.role === 'model' ? 'assistant' : 'user';
+                const content = item.parts && item.parts[0]?.text ? item.parts[0].text : "";
+                if (content) {
+                    messages.push({ role, content });
+                }
             });
-
-            const chat = model.startChat({
-                history: cleanedHistory,
-                generationConfig: { maxOutputTokens: 1000, temperature: 0.7 }
-            });
-
-            const prompt = modelName.includes('1.5') ? message : `[CONTEXT: ${systemPrompt}]\n\nUser: ${message}`;
-            const result = await chat.sendMessage(prompt);
-            return result.response.text();
-        };
-
-        try {
-            const text = await runAI(primaryModel);
-            return res.json({ response: text });
-        } catch (err) {
-            console.error(`Primary model (${primaryModel}) failed:`, err.message);
-            // Fallback
-            const text = await runAI(fallbackModel);
-            return res.json({ response: text });
         }
+
+        // Add current user message
+        messages.push({ role: "user", content: message });
+
+        const chatCompletion = await groq.chat.completions.create({
+            messages: messages,
+            model: "llama-3.3-70b-versatile",
+            temperature: 0.7,
+            max_tokens: 1024,
+            top_p: 1,
+            stream: false,
+        });
+
+        const aiResponse = chatCompletion.choices[0]?.message?.content || "I'm sorry, I couldn't process that.";
+        res.json({ response: aiResponse });
 
     } catch (error) {
-        console.error("AI Controller Critical Error:", error);
+        console.error("Groq AI Error:", error);
         res.status(500).json({ 
-            message: "AI is currently resting. Please check your API key and connection.",
+            message: "AI service is currently unavailable.",
             details: error.message 
         });
     }

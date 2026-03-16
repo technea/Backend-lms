@@ -27,7 +27,11 @@ import { registerUser, loginUser, verifyOTP, resendOTP } from './controllers/use
 const app = express();
 
 // Connect to Database
-connectDB();
+import { syncExternalCourses } from './utils/courseFetcher.js';
+connectDB().then(() => {
+    // Initial sync of external courses
+    syncExternalCourses();
+});
 
 // Middleware
 app.use(cors());

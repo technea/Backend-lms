@@ -35,6 +35,26 @@ const courseSchema = new Schema({
     playlistUrl: {
         type: String,
         default: ""
+    },
+    isExternal: {
+        type: Boolean,
+        default: false
+    },
+    externalLink: {
+        type: String,
+        default: ""
+    },
+    source: {
+        type: String,
+        default: "NexLearn" // 'Udemy', 'freeCodeCamp', etc.
+    },
+    couponCode: {
+        type: String,
+        default: ""
+    },
+    thumbnail: {
+        type: String,
+        default: ""
     }
 }, { timestamps: true });
 

@@ -4,7 +4,7 @@ import { protect } from "../middleware/auth-middleware.js";
 
 const router = express.Router();
 
-// Only logged in users can chat with AI
-router.post("/chat", protect, getAIResponse);
+// Public route to allow guests to inquire about courses
+router.post("/chat", getAIResponse);
 
 export default router;

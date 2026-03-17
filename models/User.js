@@ -42,7 +42,12 @@ const userSchema = new Schema({
         default: false
     },
     otp: String,
-    otpExpire: Date
+    otpExpire: Date,
+    twoFactorSecret: String,
+    isTwoFactorEnabled: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
 // Password hashing before saving

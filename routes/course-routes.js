@@ -1,11 +1,11 @@
-import express from "express";
-import { getCourses, getCourseById, createCourse, updateCourse, deleteCourse } from "../controllers/course-controller.js";
+import { getCourses, getFreeCourses, getCourseById, createCourse, updateCourse, deleteCourse } from "../controllers/course-controller.js";
 import { protect, instructorRoles } from "../middleware/auth-middleware.js";
 import upload from "../middleware/upload-middleware.js";
 
 const router = express.Router();
 
 router.get("/", getCourses);
+router.get("/free-courses", getFreeCourses);
 router.get("/:id", getCourseById);
 
 // Protected routes for Instructors / Admins

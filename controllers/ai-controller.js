@@ -1,7 +1,7 @@
 import Groq from "groq-sdk";
-import dotenv from 'dotenv';
 import Course from '../models/Courses.js';
-dotenv.config();
+// dotenv.config(); // Removed - already handled in server.js 
+
 
 export const getAIResponse = async (req, res) => {
     try {
@@ -12,6 +12,9 @@ export const getAIResponse = async (req, res) => {
         }
 
         const apiKey = process.env.GROQ_API_KEY;
+        console.log("🤖 AI Request received. Key status:", apiKey ? "Present" : "Missing");
+        if (apiKey) console.log("🤖 Key starts with:", apiKey.substring(0, 7) + "...");
+        
         if (!apiKey) {
             return res.status(500).json({ message: "Groq API key is missing. Please add it to .env file." });
         }

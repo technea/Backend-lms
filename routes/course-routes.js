@@ -1,3 +1,4 @@
+import express from "express";
 import { getCourses, getFreeCourses, getCourseById, createCourse, updateCourse, deleteCourse } from "../controllers/course-controller.js";
 import { protect, instructorRoles } from "../middleware/auth-middleware.js";
 import upload from "../middleware/upload-middleware.js";

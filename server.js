@@ -14,7 +14,7 @@ import courseRoutes from './routes/course-routes.js';
 import enrollmentRoutes from './routes/enrollment-routes.js';
 import lessonRoutes from './routes/lesson-routes.js';
 import adminRoutes from './routes/admin-routes.js';
-import aiRoutes from './routes/ai-routes.js';
+// import aiRoutes from './routes/ai-routes.js';
 import { protect } from './middleware/auth-middleware.js';
 import { getMyEnrollments } from './controllers/enrollment-controller.js';
 import { syncExternalCourses } from './utils/courseFetcher.js';
@@ -61,7 +61,7 @@ app.use('/api/enroll', enrollmentRoutes);
 app.get('/api/my-courses', protect, getMyEnrollments);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/ai', aiRoutes);
+// app.use('/api/ai', aiRoutes);
 
 // Server Setup
 const PORT = process.env.PORT || 3000;

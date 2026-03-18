@@ -31,6 +31,17 @@ const seedFreeCourses = async () => {
                 thumbnail: "💻"
             },
             {
+                title: "JavaScript Algorithms and Data Structures",
+                description: "Master JavaScript with this certificate from freeCodeCamp covering basic to advanced algorithms.",
+                category: "Technology",
+                instructor: instructor._id,
+                price: 0,
+                isExternal: true,
+                externalLink: "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures-v8/",
+                source: "freeCodeCamp",
+                thumbnail: "🧩"
+            },
+            {
                 title: "Scientific Computing with Python",
                 description: "Learn Python from the ground up with freeCodeCamp's comprehensive certification program.",
                 category: "Data Science",
@@ -53,16 +64,72 @@ const seedFreeCourses = async () => {
                 thumbnail: "🎨"
             },
             {
-                title: "Udemy: Web Development Bootcamp (Free Coupon)",
-                description: "Limited time free coupon for the complete web development bootcamp. Master MERN stack.",
+                title: "Udemy: Complete Python Developer",
+                description: "Master Python from zero to hero. Learn about the internals of the language and build applications.",
                 category: "Technology",
                 instructor: instructor._id,
                 price: 0,
                 isExternal: true,
-                externalLink: "https://www.udemy.com/course/the-complete-web-development-bootcamp/",
+                externalLink: "https://www.udemy.com/course/complete-python-developer-zero-to-mastery/",
                 source: "Udemy",
-                couponCode: "NEXLEARN2026",
-                thumbnail: "🚀"
+                couponCode: "FREEPY2026",
+                thumbnail: "🎓"
+            },
+            {
+                title: "Google Data Analytics",
+                description: "Kickstart your career in data analytics with this professional certificate from Google on Coursera.",
+                category: "Data Science",
+                instructor: instructor._id,
+                price: 0,
+                isExternal: true,
+                externalLink: "https://www.coursera.org/professional-certificates/google-data-analytics",
+                source: "Coursera",
+                thumbnail: "📊"
+            },
+            {
+                title: "Intro to Social Media Marketing",
+                description: "Learn from Meta experts how to leverage social platforms to grow any business from scratch.",
+                category: "Marketing",
+                instructor: instructor._id,
+                price: 0,
+                isExternal: true,
+                externalLink: "https://www.coursera.org/learn/social-media-marketing-introduction",
+                source: "Meta",
+                thumbnail: "📢"
+            },
+            {
+                title: "Microsoft Azure Fundamentals",
+                description: "Pass your AZ-900 exam with this full curated path from Microsoft Learn—completely free.",
+                category: "Technology",
+                instructor: instructor._id,
+                price: 0,
+                isExternal: true,
+                externalLink: "https://learn.microsoft.com/en-us/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/",
+                source: "Microsoft",
+                thumbnail: "☁️"
+            },
+            {
+                title: "Udemy: Graphic Design Masterclass",
+                description: "Learn Photoshop, Illustrator, and InDesign by working on real-world creative projects.",
+                category: "Design",
+                instructor: instructor._id,
+                price: 0,
+                isExternal: true,
+                externalLink: "https://www.udemy.com/course/graphic-design-masterclass/",
+                source: "Udemy",
+                couponCode: "ARTOFDESIGN",
+                thumbnail: "🖋️"
+            },
+            {
+                title: "Financial Planning for Young Adults",
+                description: "Master your personal finances, budgeting, and investment strategies with this free course.",
+                category: "Business",
+                instructor: instructor._id,
+                price: 0,
+                isExternal: true,
+                externalLink: "https://www.coursera.org/learn/financial-planning",
+                source: "Coursera",
+                thumbnail: "💰"
             }
         ];
 

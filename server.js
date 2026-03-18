@@ -55,16 +55,33 @@ app.post('/api/auth/verify-otp', verifyOTP);
 app.post('/api/auth/resend-otp', resendOTP);
 
 // Main Routes
+console.log('Mounting /api/users routes...');
 app.use('/api/users', userRoutes);
+console.log('Mounting /api/courses routes...');
 app.use('/api/courses', courseRoutes);
 app.use('/api/enroll', enrollmentRoutes);
 app.get('/api/my-courses', protect, getMyEnrollments);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/admin', adminRoutes);
-// app.use('/api/ai', aiRoutes);
+
+// 404 Handler
+app.use((req, res, next) => {
+    console.log(`404 - Not Found: ${req.method} ${req.originalUrl}`);
+    res.status(404).json({ message: `Route ${req.originalUrl} not found` });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('SERVER ERROR:', err);
+    res.status(500).json({ 
+        success: false, 
+        message: err.message || 'Internal Server Error',
+        error: process.env.NODE_ENV === 'development' ? err : {}
+    });
+});
 
 // Server Setup
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
         console.log(`Server listening on port ${PORT}`);

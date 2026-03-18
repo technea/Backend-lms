@@ -3,9 +3,12 @@ import Course from "../models/Courses.js"
 
 export const getCourses = async (req, res) => {
     try {
+        console.log("Fetching courses from DB...");
         const courses = await Course.find();
+        console.log(`Found ${courses.length} courses.`);
         res.json(courses);
     } catch (error) {
+        console.error("Error in getCourses:", error.message);
         res.status(500).json({ message: error.message });
     }
 };

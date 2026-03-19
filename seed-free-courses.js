@@ -31,37 +31,37 @@ const seedFreeCourses = async () => {
                 thumbnail: "💻"
             },
             {
-                title: "JavaScript Algorithms and Data Structures",
-                description: "Master JavaScript with this certificate from freeCodeCamp covering basic to advanced algorithms.",
+                title: "AI Foundations for Everyone Specialization",
+                description: "Master the fundamentals of Artificial Intelligence with this comprehensive program from IBM.",
                 category: "Technology",
                 instructor: instructor._id,
                 price: 0,
                 isExternal: true,
-                externalLink: "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures-v8/",
-                source: "freeCodeCamp",
-                thumbnail: "🧩"
+                externalLink: "https://www.coursera.org/specializations/ai-foundations-for-everyone",
+                source: "IBM",
+                thumbnail: "🤖"
             },
             {
-                title: "Scientific Computing with Python",
-                description: "Learn Python from the ground up with freeCodeCamp's comprehensive certification program.",
+                title: "Python for Everybody Specialization",
+                description: "This Specialization builds on the success of the Python for Everybody course and will introduce fundamental programming concepts.",
+                category: "Technology",
+                instructor: instructor._id,
+                price: 0,
+                isExternal: true,
+                externalLink: "https://www.coursera.org/specializations/python",
+                source: "University of Michigan",
+                thumbnail: "🐍"
+            },
+            {
+                title: "Machine Learning Specialization",
+                description: "The Machine Learning Specialization is a foundational online program created in collaboration between DeepLearning.AI and Stanford Online.",
                 category: "Data Science",
                 instructor: instructor._id,
                 price: 0,
                 isExternal: true,
-                externalLink: "https://www.freecodecamp.org/learn/scientific-computing-with-python/",
-                source: "freeCodeCamp",
-                thumbnail: "🐍"
-            },
-            {
-                title: "Responsive Web Design",
-                description: "Master HTML and CSS to build modern, responsive websites with this freeCodeCamp path.",
-                category: "Design",
-                instructor: instructor._id,
-                price: 0,
-                isExternal: true,
-                externalLink: "https://www.freecodecamp.org/learn/2022/responsive-web-design/",
-                source: "freeCodeCamp",
-                thumbnail: "🎨"
+                externalLink: "https://www.coursera.org/specializations/machine-learning-introduction",
+                source: "Stanford / DeepLearning.AI",
+                thumbnail: "🧠"
             },
             {
                 title: "Udemy: Complete Python Developer",
@@ -87,15 +87,37 @@ const seedFreeCourses = async () => {
                 thumbnail: "📊"
             },
             {
-                title: "Intro to Social Media Marketing",
-                description: "Learn from Meta experts how to leverage social platforms to grow any business from scratch.",
+                title: "Google AI Essentials",
+                description: "Learn how to use AI in your everyday work life to be more productive and efficient.",
+                category: "Technology",
+                instructor: instructor._id,
+                price: 0,
+                isExternal: true,
+                externalLink: "https://www.coursera.org/learn/google-ai-essentials",
+                source: "Google",
+                thumbnail: "💡"
+            },
+            {
+                title: "Fundamentals of Social Media Advertising",
+                description: "Learn how to establish a social media presence and create effective ad campaigns on Facebook and Instagram.",
                 category: "Marketing",
                 instructor: instructor._id,
                 price: 0,
                 isExternal: true,
-                externalLink: "https://www.coursera.org/learn/social-media-marketing-introduction",
+                externalLink: "https://www.coursera.org/learn/social-media-advertising-fundamentals",
                 source: "Meta",
                 thumbnail: "📢"
+            },
+            {
+                title: "Financial Markets",
+                description: "An overview of the ideas, methods, and institutions that permit human society to manage risks and foster enterprise.",
+                category: "Business",
+                instructor: instructor._id,
+                price: 0,
+                isExternal: true,
+                externalLink: "https://www.coursera.org/learn/financial-markets-global",
+                source: "Yale University",
+                thumbnail: "🏛️"
             },
             {
                 title: "Microsoft Azure Fundamentals",

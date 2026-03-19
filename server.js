@@ -38,7 +38,9 @@ connectDB().then(() => {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+const isVercel = process.env.VERCEL === '1' || process.env.VERCEL;
+app.use('/uploads', express.static(isVercel ? '/tmp' : path.join(__dirname, 'uploads')));
 
 // Root Route
 app.get('/', (req, res) => {

@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,7 +41,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const isVercel = process.env.VERCEL === '1' || process.env.VERCEL;
-app.use('/uploads', express.static(isVercel ? '/tmp' : path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(isVercel ? os.tmpdir() : path.join(__dirname, 'uploads')));
 
 // Root Route
 app.get('/', (req, res) => {

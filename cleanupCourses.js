@@ -1,28 +1,30 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Course from './models/Courses.js';
-import connectDB from './config/db.js';
 
 dotenv.config();
 
-const deleteInternalCourses = async () => {
+const cleanDB = async () => {
     try {
-        await connectDB();
-        
-        // Delete courses that are NOT external
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("Connected to DB...");
+
         const result = await Course.deleteMany({ 
             $or: [
-                { isExternal: false },
-                { isExternal: { $exists: false } }
+                { title: { $regex: /Chai aur Code/i } },
+                { description: { $regex: /Hitesh Choudhary/i } },
+                { description: { $regex: /Chai aur Code/i } }
             ]
         });
+
+        console.log(`Deleted ${result.deletedCount} courses related to 'Chai aur Code' or 'Hitesh Choudhary'.`);
         
-        console.log(`✅ Successfully deleted ${result.deletedCount} internal courses.`);
+        mongoose.connection.close();
         process.exit(0);
     } catch (error) {
-        console.error("❌ Error deleting courses:", error.message);
+        console.error("Error cleaning DB:", error.message);
         process.exit(1);
     }
 };
 
-deleteInternalCourses();
+cleanDB();

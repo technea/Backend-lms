@@ -1,4 +1,5 @@
 import Lesson from "../models/Lesson.js";
+import { getYouTubeEmbedUrl, isValidYouTubeUrl } from "../utils/youtubeHelper.js";
 
 // Get all lessons for a specific course
 export const getLessonsByCourse = async (req, res) => {
@@ -31,6 +32,14 @@ export const createLesson = async (req, res) => {
         // If a file is uploaded, use its path
         if (req.file) {
             videoUrl = `/uploads/${req.file.filename}`;
+        } else if (videoUrl) {
+            // If it's a YouTube URL, validate and convert to embed format
+            if (isValidYouTubeUrl(videoUrl)) {
+                videoUrl = getYouTubeEmbedUrl(videoUrl);
+            } else if (!videoUrl.startsWith('/uploads/')) {
+                // If it's not a local file and not a valid YouTube URL, return error
+                return res.status(400).json({ message: "Invalid YouTube URL provided" });
+            }
         }
 
         const newLesson = new Lesson({
@@ -49,7 +58,17 @@ export const createLesson = async (req, res) => {
 // Update lesson
 export const updateLesson = async (req, res) => {
     try {
-        const { title, content, videoUrl } = req.body;
+        const { title, content } = req.body;
+        let videoUrl = req.body.videoUrl;
+
+        // If a new video file is provided, update the videoUrl
+        if (req.file) {
+            videoUrl = `/uploads/${req.file.filename}`;
+        } else if (videoUrl && isValidYouTubeUrl(videoUrl)) {
+            // Process new YouTube URL if provided
+            videoUrl = getYouTubeEmbedUrl(videoUrl);
+        }
+
         const updatedLesson = await Lesson.findByIdAndUpdate(
             req.params.id,
             { title, content, videoUrl },

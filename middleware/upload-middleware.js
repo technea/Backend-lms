@@ -30,7 +30,7 @@ function checkFileType(file, cb) {
   if (mimetype && extname) {
     return cb(null, true);
   } else {
-    cb('Error: Videos or Images Only!');
+    cb(new Error('File format not supported. Please upload JPG, PNG, MP4, or AVI only.'));
   }
 }
 

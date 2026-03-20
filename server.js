@@ -40,6 +40,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Simple Logging Middleware
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+    next();
+});
+
 const isVercel = process.env.VERCEL === '1' || process.env.VERCEL;
 app.use('/uploads', express.static(isVercel ? os.tmpdir() : path.join(__dirname, 'uploads')));
 

@@ -7,22 +7,6 @@ dotenv.config();
 
 const courses = [
   {
-    title: "ReactJS Mastery (Chai aur Code)",
-    description: "A comprehensive guide to ReactJS by Hitesh Choudhary. Learn Hooks, State Management, and building production-ready apps.",
-    category: "Frontend",
-    price: 0,
-    isYouTube: true,
-    playlistUrl: "https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsLzPIT33is_y7"
-  },
-  {
-    title: "Backend Development with Node.js",
-    description: "Master Node.js and Express with Hitesh Choudhary. Deep dive into APIs, Middlewares, and Database integration.",
-    category: "Backend",
-    price: 0,
-    isYouTube: true,
-    playlistUrl: "https://www.youtube.com/playlist?list=PLu71SKxNbfoBsMugTFALhcVz378-29N0B"
-  },
-  {
     title: "Next.js 14 Full Course",
     description: "Learn Next.js 14 from Piyush Garg. Covering App Router, Server Actions, and SEO optimization for modern web apps.",
     category: "Fullstack",
@@ -31,12 +15,20 @@ const courses = [
     playlistUrl: "https://www.youtube.com/playlist?list=PLinedj3B30sDby4Al-i13hQJGQoRQDf69"
   },
   {
-    title: "JavaScript Professional Level",
-    description: "Go from zero to hero in JavaScript with Chai aur Code series. Understand closures, prototypes, and async JS deeply.",
-    category: "Programming",
+    title: "Mastering Tailwind CSS",
+    description: "Build beautiful, responsive designs with Tailwind CSS. Learn class-based styling, responsive layouts, and dark mode implementation.",
+    category: "Design",
     price: 0,
     isYouTube: true,
-    playlistUrl: "https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tQU7QXE"
+    playlistUrl: "https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsLzPIT33is_y7"
+  },
+  {
+    title: "Software Testing – Playwright, E2E, and AI Agents",
+    description: "Master software testing using modern tools like Playwright. Learn E2E testing, automation, and the role of AI agents in testing.",
+    category: "Testing",
+    price: 0,
+    isYouTube: true,
+    playlistUrl: "https://www.youtube.com/watch?v=jydYq7oAtD8"
   }
 ];
 

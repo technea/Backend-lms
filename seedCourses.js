@@ -7,12 +7,13 @@ dotenv.config();
 
 const courses = [
   {
-    title: "Next.js 14 Full Course",
-    description: "Learn Next.js 14 from Piyush Garg. Covering App Router, Server Actions, and SEO optimization for modern web apps.",
-    category: "Fullstack",
+    title: "Software Testing – Playwright, E2E, and AI Agents",
+    description: "Learn the essentials of software testing, from fundamental concepts like the testing pyramid to hands-on automation using Playwright. Explore real-world end-to-end testing, AI-driven testing agents, and best practices for building reliable software.",
+    category: "Technology",
     price: 0,
     isYouTube: true,
-    playlistUrl: "https://www.youtube.com/playlist?list=PLinedj3B30sDby4Al-i13hQJGQoRQDf69"
+    playlistUrl: "https://www.youtube.com/watch?v=jydYq7oAtD8",
+    points: 100
   },
   {
     title: "Mastering Tailwind CSS",
@@ -20,15 +21,8 @@ const courses = [
     category: "Design",
     price: 0,
     isYouTube: true,
-    playlistUrl: "https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsLzPIT33is_y7"
-  },
-  {
-    title: "Software Testing – Playwright, E2E, and AI Agents",
-    description: "Master software testing using modern tools like Playwright. Learn E2E testing, automation, and the role of AI agents in testing.",
-    category: "Testing",
-    price: 0,
-    isYouTube: true,
-    playlistUrl: "https://www.youtube.com/watch?v=jydYq7oAtD8"
+    playlistUrl: "https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsLzPIT33is_y7",
+    points: 50
   }
 ];
 
@@ -53,7 +47,9 @@ const seedCourses = async () => {
         await newCourse.save();
         console.log(`Added course: ${courseData.title}`);
       } else {
-        console.log(`Course exists: ${courseData.title}`);
+        // Update existing course with new data (like points)
+        await Course.findOneAndUpdate({ title: courseData.title }, courseData);
+        console.log(`Updated course: ${courseData.title}`);
       }
     }
 

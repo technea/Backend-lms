@@ -9,20 +9,11 @@ const courses = [
   {
     title: "Software Testing – Playwright, E2E, and AI Agents",
     description: "Learn the essentials of software testing, from fundamental concepts like the testing pyramid to hands-on automation using Playwright. Explore real-world end-to-end testing, AI-driven testing agents, and best practices for building reliable software.",
-    category: "Technology",
+    category: "Testing",
     price: 0,
     isYouTube: true,
     playlistUrl: "https://www.youtube.com/watch?v=jydYq7oAtD8",
     points: 100
-  },
-  {
-    title: "Mastering Tailwind CSS",
-    description: "Build beautiful, responsive designs with Tailwind CSS. Learn class-based styling, responsive layouts, and dark mode implementation.",
-    category: "Design",
-    price: 0,
-    isYouTube: true,
-    playlistUrl: "https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsLzPIT33is_y7",
-    points: 50
   }
 ];
 

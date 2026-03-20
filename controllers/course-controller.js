@@ -1,5 +1,7 @@
 import express from "express"
 import Course from "../models/Courses.js"
+import User from "../models/User.js"
+import Enrollment from "../models/Enrollment.js"
 
 export const getCourses = async (req, res) => {
     try {
@@ -55,6 +57,25 @@ export const createCourse = async (req, res) => {
             playlistUrl
         });
         const savedCourse = await newCourse.save();
+
+        // Auto-enroll all existing students into the new course
+        try {
+            const students = await User.find({ role: 'student' });
+            if (students.length > 0) {
+                const enrollmentData = students.map(student => ({
+                    student: student._id,
+                    course: savedCourse._id,
+                    progress: 0
+                }));
+                await Enrollment.insertMany(enrollmentData);
+                console.log(`Auto-enrolled ${students.length} students into course: ${savedCourse.title}`);
+            }
+        } catch (enrollErr) {
+            console.error("Auto-enrollment failed during course creation:", enrollErr.message);
+            // We don't fail the course creation if auto-enrollment fails, 
+            // but we log the error.
+        }
+
         res.status(201).json(savedCourse);
     } catch (error) {
         res.status(400).json({ message: error.message });

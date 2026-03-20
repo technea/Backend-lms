@@ -15,6 +15,7 @@ const cleanDB = async () => {
                 $in: [
                     "Next.js 14 Full Course",
                     "JavaScript Professional Level",
+                    "Mastering Tailwind CSS",
                     /Chai aur Code/i
                 ] 
             }

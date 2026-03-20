@@ -1,4 +1,6 @@
 import express from 'express';
+import { Server } from 'socket.io';
+import http from 'http';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
@@ -20,6 +22,9 @@ import quizRoutes from './routes/quiz-routes.js';
 import { protect } from './middleware/auth-middleware.js';
 import { getMyEnrollments } from './controllers/enrollment-controller.js';
 import { syncExternalCourses } from './utils/courseFetcher.js';
+import chatSocket from './socket/chatSocket.js';
+import Message from './models/Message.js'; // Model import for chat routes if needed
+
 
 // Load Environment Variables
 dotenv.config();
@@ -28,6 +33,19 @@ import { registerUser, loginUser, verifyOTP, resendOTP } from './controllers/use
 
 // Initialize App
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*", 
+        methods: ["GET", "POST"]
+    },
+    connectionStateRecovery: {} // From Socket.io v4 tutorial: enables state recovery
+});
+
+
+// Start Socket.io Chat logic
+chatSocket(io);
+
 
 // Connect to Database
 connectDB().then(() => {
@@ -94,9 +112,10 @@ app.use((err, req, res, next) => {
 // Server Setup
 const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`Server listening on port ${PORT}`);
     });
 }
+
 
 export default app;

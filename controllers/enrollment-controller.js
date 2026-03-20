@@ -1,5 +1,7 @@
 import express from "express"
 import Enrollment from "../models/Enrollment.js"
+import Course from "../models/Courses.js"
+import User from "../models/User.js"
 
 export const getEnrollments = async (req, res) => {
     try {
@@ -53,15 +55,36 @@ export const getMyEnrollments = async (req, res) => {
 
 export const updateEnrollment = async (req, res) => {
     try {
-        const { student, course, progress } = req.body;
-        const updatedEnrollment = await Enrollment.findByIdAndUpdate(
-            req.params.id,
-            { student, course, progress },
-            { new: true, runValidators: true }
-        );
-        if (!updatedEnrollment) return res.status(404).json({ message: "Enrollment not found" });
+        const { progress } = req.body;
+        const enrollment = await Enrollment.findById(req.params.id);
+        
+        if (!enrollment) return res.status(404).json({ message: "Enrollment not found" });
+
+        // Security check: Only student who owns enrollment or Admin can update
+        if (enrollment.student.toString() !== req.user.id && req.user.role !== 'admin') {
+            return res.status(403).json({ message: "Not authorized to update this progress" });
+        }
+
+        // Update progress
+        const oldProgress = enrollment.progress;
+        enrollment.progress = progress;
+
+        // Check if just reached 100% and point addition is needed
+        if (progress >= 100 && oldProgress < 100) {
+            const course = await Course.findById(enrollment.course);
+            if (course && course.points) {
+                // Add points to user
+                await User.findByIdAndUpdate(enrollment.student, {
+                    $inc: { points: course.points }
+                });
+                console.log(`User ${enrollment.student} earned ${course.points} points for completing ${course.title}`);
+            }
+        }
+
+        const updatedEnrollment = await enrollment.save();
         res.json({ message: "Enrollment updated successfully", enrollment: updatedEnrollment });
     } catch (error) {
+        console.error("Update Enrollment Error:", error.message);
         res.status(400).json({ message: error.message });
     }
 };

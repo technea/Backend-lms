@@ -8,7 +8,7 @@ router.get("/", protect, adminRoles, getEnrollments);
 router.get("/my-courses", protect, getMyEnrollments);
 router.get("/:id", protect, getEnrollmentById);
 router.post("/", protect, createEnrollment);
-router.put("/:id", protect, adminRoles, updateEnrollment);
+router.put("/:id", protect, updateEnrollment);
 router.delete("/:id", protect, adminRoles, deleteEnrollment);
 
 export default router;

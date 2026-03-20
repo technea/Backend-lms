@@ -47,6 +47,10 @@ const userSchema = new Schema({
     isTwoFactorEnabled: {
         type: Boolean,
         default: false
+    },
+    points: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 

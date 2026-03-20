@@ -603,3 +603,21 @@ export const disable2FA = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// -----------------------------
+// 17️⃣ Get Leaderboard (Real-time)
+// -----------------------------
+export const getLeaderboard = async (req, res) => {
+    try {
+        // Fetch top 10 students by points
+        const topStudents = await User.find({ role: 'student' })
+            .sort({ points: -1 })
+            .limit(10)
+            .select("name avatar points");
+
+        res.json(topStudents);
+    } catch (error) {
+        console.error("Leaderboard Error:", error.message);
+        res.status(500).json({ message: error.message });
+    }
+};

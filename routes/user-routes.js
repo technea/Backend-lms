@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers, getUserById, createUser, updateUser, deleteUser, registerUser, loginUser, changePassword, forgotPassword, resetPassword, updateAvatar, verifyOTP, resendOTP, setup2FA, verifyAndEnable2FA, loginWith2FA, disable2FA } from "../controllers/user-controller.js";
+import { getUsers, getUserById, createUser, updateUser, deleteUser, registerUser, loginUser, changePassword, forgotPassword, resetPassword, updateAvatar, verifyOTP, resendOTP, setup2FA, verifyAndEnable2FA, loginWith2FA, disable2FA, getLeaderboard } from "../controllers/user-controller.js";
 import { protect, adminRoles } from "../middleware/auth-middleware.js";
 import upload from "../middleware/upload-middleware.js";
 
@@ -16,6 +16,7 @@ router.get("/2fa/setup", protect, setup2FA);
 router.post("/2fa/verify", protect, verifyAndEnable2FA);
 router.post("/2fa/login", loginWith2FA);
 router.post("/2fa/disable", protect, disable2FA);
+router.get("/global/leaderboard", protect, getLeaderboard);
 
 // Administrative routes
 router.get("/", protect, adminRoles, getUsers);

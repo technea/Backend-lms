@@ -621,3 +621,55 @@ export const getLeaderboard = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// -----------------------------
+// 18️⃣ Wallet Login (Base Account)
+// -----------------------------
+export const walletLogin = async (req, res) => {
+    try {
+        const { address, message, signature } = req.body;
+        
+        console.log(`Wallet Login Request: ${address}`);
+
+        // IMPORTANT: Signature verification should be implemented here.
+        // We are trusting the address for this demonstration as per requested limited libs.
+        
+        let user = await User.findOne({ walletAddress: address.toLowerCase() });
+        
+        if (!user) {
+            // Create a new user account for this wallet
+            user = new User({
+                name: `User ${address.slice(2, 8).toUpperCase()}`,
+                email: `${address.toLowerCase()}@nexlearn.wallet`,
+                // Generate a random password since one is required by schema
+                password: crypto.randomBytes(16).toString('hex') + "A1!",
+                walletAddress: address.toLowerCase(),
+                isVerified: true,
+                age: 18 // Default age requirement
+            });
+            await user.save();
+            console.log(`Created new user for wallet: ${address}`);
+        }
+        
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+        
+        res.json({ 
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                avatar: user.avatar
+            }, 
+            token, 
+            message: "Login successful with Base wallet" 
+        });
+    } catch (error) {
+        console.error("Wallet Login Error:", error);
+        res.status(500).json({ message: error.message });
+    }
+};

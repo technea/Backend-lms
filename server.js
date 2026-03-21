@@ -29,7 +29,7 @@ import Message from './models/Message.js'; // Model import for chat routes if ne
 // Load Environment Variables
 dotenv.config();
 
-import { registerUser, loginUser, verifyOTP, resendOTP } from './controllers/user-controller.js';
+import { registerUser, loginUser, verifyOTP, resendOTP, walletLogin } from './controllers/user-controller.js';
 
 // Initialize App
 const app = express();
@@ -81,6 +81,7 @@ app.post('/api/auth/register', registerUser);
 app.post('/api/auth/login', loginUser);
 app.post('/api/auth/verify-otp', verifyOTP);
 app.post('/api/auth/resend-otp', resendOTP);
+app.post('/api/auth/wallet-login', walletLogin);
 
 // Main Routes
 console.log('Mounting /api/users routes...');

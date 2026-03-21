@@ -51,6 +51,12 @@ const userSchema = new Schema({
     points: {
         type: Number,
         default: 0
+    },
+    walletAddress: {
+        type: String,
+        unique: true,
+        sparse: true,
+        lowercase: true
     }
 }, { timestamps: true });
 

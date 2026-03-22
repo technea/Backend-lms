@@ -2,6 +2,8 @@ import Message from '../models/Message.js';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
+
+
 const chatSocket = (io) => {
     // Authentication Middleware for individual socket connections
     // Based on Socket.io v4 patterns: using socket.handshake.auth
@@ -48,6 +50,12 @@ const chatSocket = (io) => {
             } catch (err) {
                 console.error('Room History Error:', err);
             }
+        });
+
+        // 1b. Leave a Chat Room
+        socket.on('leaveRoom', (room) => {
+            socket.leave(room);
+            console.log(`${socket.user.name} left room: ${room}`);
         });
 
         // 2. Chat Message with Acknowledgment (v4 tutorial pattern)

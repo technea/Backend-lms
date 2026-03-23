@@ -96,7 +96,27 @@ const chatSocket = (io) => {
             }
         });
 
-        // 3. User Typing Event
+        // 3. Delete Message
+        socket.on('deleteMessage', async (messageId) => {
+            try {
+                const message = await Message.findById(messageId);
+                if (!message) return;
+
+                // Check ownership (only sender or admin can delete)
+                if (message.sender.toString() !== socket.user._id.toString() && socket.user.role !== 'admin') {
+                    return socket.emit('error', { message: 'Unauthorized to delete this message' });
+                }
+
+                await Message.findByIdAndDelete(messageId);
+                
+                // Broadcast deletion to all in room
+                io.to(message.room).emit('messageDeleted', messageId);
+            } catch (err) {
+                console.error('Delete Message Error:', err);
+            }
+        });
+
+        // 4. User Typing Event
         socket.on('typing', (data) => {
             const { room, isTyping } = data;
             socket.to(room).emit('userTyping', { 

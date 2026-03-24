@@ -26,3 +26,21 @@ export const sendMessage = async (req, res) => {
         res.status(500).json({ success: false, message: err.message });
     }
 };
+
+export const deleteMessage = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const message = await Message.findById(id);
+        if (!message) return res.status(404).json({ success: false, message: 'Message not found' });
+
+        // Only sender or admin can delete
+        if (message.sender.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: 'Unauthorized' });
+        }
+
+        await Message.findByIdAndDelete(id);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};

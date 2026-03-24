@@ -12,6 +12,9 @@ import os from 'os';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Detect environment
+const IS_VERCEL = process.env.VERCEL === '1' || process.env.VERCEL || process.env.NODE_ENV === 'production';
+
 // Route Imports
 import userRoutes from './routes/user-routes.js';
 import courseRoutes from './routes/course-routes.js';
@@ -50,8 +53,15 @@ chatSocket(io);
 
 // Connect to Database
 connectDB().then(() => {
-    // Initial sync of external courses
-    syncExternalCourses();
+    // ONLY sync courses in local development, skip in Vercel to avoid performance penalties and cold start timeouts
+    if (!IS_VERCEL) {
+        console.log("🛠️ Syncing external courses (Local mode)...");
+        syncExternalCourses();
+    } else {
+        console.log("☁️ Skipping course sync (Vercel mode)...");
+    }
+}).catch(err => {
+    console.error("❌ Critical: DB Connection Failure during boot", err);
 });
 
 // Middleware
@@ -65,8 +75,7 @@ app.use((req, res, next) => {
     next();
 });
 
-const isVercel = process.env.VERCEL === '1' || process.env.VERCEL;
-app.use('/uploads', express.static(isVercel ? os.tmpdir() : path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(IS_VERCEL ? os.tmpdir() : path.join(__dirname, 'uploads')));
 
 // Root Route
 app.get('/', (req, res) => {
@@ -115,10 +124,15 @@ app.use((err, req, res, next) => {
 // Server Setup
 const PORT = process.env.PORT || 5000;
 
-// Ensure server listens in all local development scenarios 
-server.listen(PORT, () => {
-    console.log(`LMS Server with Socket.io active on port ${PORT}`);
-});
+// ONLY call listen if NOT running on Vercel
+// Vercel handles the server listening internally and might throw Errors if we try to bind a port
+if (!IS_VERCEL) {
+    server.listen(PORT, () => {
+        console.log(`LMS Server with Socket.io active on port ${PORT}`);
+    });
+} else {
+    console.log("🚀 Server initialized for Vercel environment.");
+}
 
 
 export default app;

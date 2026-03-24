@@ -37,18 +37,28 @@ import { registerUser, loginUser, verifyOTP, resendOTP, walletLogin } from './co
 
 // Initialize App
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "*", 
-        methods: ["GET", "POST"]
-    },
-    connectionStateRecovery: {} // From Socket.io v4 tutorial: enables state recovery
-});
 
+// Use a regular HTTP server for local development to support Socket.io
+// In Vercel, we only use the 'app' (Express) instance
+let server = app; 
+let io = null;
 
-// Start Socket.io Chat logic
-chatSocket(io);
+if (!IS_VERCEL) {
+    server = http.createServer(app);
+    io = new Server(server, {
+        cors: {
+            origin: "*", 
+            methods: ["GET", "POST"]
+        },
+        connectionStateRecovery: {} 
+    });
+    
+    // Start Socket.io Chat logic (Only locally)
+    chatSocket(io);
+    console.log("🔌 Socket.io initialized (Local Mode)");
+} else {
+    console.log("☁️ Running in Serverless Mode (Socket.io disabled)");
+}
 
 
 // Connect to Database

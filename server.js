@@ -2,6 +2,7 @@ import express from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
 import dotenv from 'dotenv';
+dotenv.config();
 import cors from 'cors';
 import connectDB from './config/db.js';
 import path from 'path';
@@ -27,8 +28,7 @@ import chatSocket from './socket/chatSocket.js';
 import Message from './models/Message.js'; // Model import for chat routes if needed
 
 
-// Load Environment Variables
-dotenv.config();
+// Redundant config removed, moved to top
 
 import { registerUser, loginUser, verifyOTP, resendOTP, walletLogin } from './controllers/user-controller.js';
 

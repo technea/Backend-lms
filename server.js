@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 import userRoutes from './routes/user-routes.js';
 import courseRoutes from './routes/course-routes.js';
 import enrollmentRoutes from './routes/enrollment-routes.js';
+import chatRoutes from './routes/chatRoutes.js';
 import lessonRoutes from './routes/lesson-routes.js';
 import adminRoutes from './routes/admin-routes.js';
 import quizRoutes from './routes/quiz-routes.js';
@@ -93,6 +94,7 @@ app.get('/api/my-courses', protect, getMyEnrollments);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/quizzes', quizRoutes);
+app.use('/api/chat', chatRoutes);
 
 // 404 Handler
 app.use((req, res, next) => {
@@ -112,11 +114,11 @@ app.use((err, req, res, next) => {
 
 // Server Setup
 const PORT = process.env.PORT || 5000;
-if (process.env.NODE_ENV !== 'production') {
-    server.listen(PORT, () => {
-        console.log(`Server listening on port ${PORT}`);
-    });
-}
+
+// Ensure server listens in all local development scenarios 
+server.listen(PORT, () => {
+    console.log(`LMS Server with Socket.io active on port ${PORT}`);
+});
 
 
 export default app;

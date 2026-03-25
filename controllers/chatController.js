@@ -21,6 +21,7 @@ export const sendMessage = async (req, res) => {
             message: message
         });
         await msg.save();
+        await msg.populate('sender', 'name avatar');
         res.json({ success: true, message: msg });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
@@ -44,3 +45,20 @@ export const deleteMessage = async (req, res) => {
         res.status(500).json({ success: false, message: err.message });
     }
 };
+
+export const deleteAllMessages = async (req, res) => {
+    try {
+        const { room } = req.params;
+        if (!room) return res.status(400).json({ success: false, message: 'Room name required' });
+
+        if (req.user.role === 'admin') {
+            await Message.deleteMany({ room });
+        } else {
+            await Message.deleteMany({ room, sender: req.user._id });
+        }
+        res.json({ success: true, message: 'Messages deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+

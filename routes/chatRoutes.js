@@ -1,5 +1,5 @@
 import express from 'express';
-import { getMessages, sendMessage, deleteMessage } from '../controllers/chatController.js';
+import { getMessages, sendMessage, deleteMessage, deleteAllMessages } from '../controllers/chatController.js';
 import { protect } from '../middleware/auth-middleware.js';
 
 const router = express.Router();
@@ -7,5 +7,6 @@ const router = express.Router();
 router.get('/messages', protect, getMessages);
 router.post('/send', protect, sendMessage);
 router.delete('/messages/:id', protect, deleteMessage);
+router.delete('/room/:room', protect, deleteAllMessages);
 
 export default router;
